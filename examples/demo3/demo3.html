@@ -59,14 +59,14 @@ function addRand(){
 		}
 }
 
-moving = new IsoObject(-300,-300,0,[[-10,-10,0],[10,10,20]],["fig3.png"])
-moving.boxColor = "grey"
-world.add(moving)
-world.center(moving,1.1)
-//world.smartMovement = true;
-moving.displayBox = true;
-moving.displayImage=false;
-world.setKeyObject(moving)
+moving = new IsoObject(-300,-300,0,[[-10,-10,0],[10,10,20]],["fig3.png"])//create controllable player object
+moving.boxColor = "grey"//make player box grey
+world.add(moving)//add player box to world
+world.center(moving,1.1)//center player box
+moving.displayBox = true;//make bounding box visible
+moving.displayImage=false;//make image box invisible
+world.setKeyObject(moving)//make movable via WASD and arrow keys
+
 for(let i=0;i<50;i++){
 	addRand()
 }

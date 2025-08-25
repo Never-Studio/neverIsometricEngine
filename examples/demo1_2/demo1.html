@@ -12,12 +12,12 @@
 <canvas width="1000px" height="1000px" id="myCanvas"></canvas>
 <script src= "isometricEngine.js"></script>
 <script>
-setRatio(1/4)
-setCanvas("myCanvas",pixelized=true,full=true)
+setRatio(1/4)//set isometric aspect ratio to 1/4
+setCanvas("myCanvas",pixelized=true,full=true)//sepcify canvas
 
-var world = new World("myCanvas")
-var objects = [];
-function setRan(obj,amount){
+var world = new World("myCanvas")//world object -> contains all IsoObjects, handles drawing and saves images
+var objects = [];//list of objects
+function setRan(obj,amount){//set direction randomly after collision (called upon generation and for each collision)
 	if(Math.round(Math.random())==1){
 		obj.directionX = amount*Math.random()-amount/2;
 		obj.directionY =0;
@@ -26,29 +26,30 @@ function setRan(obj,amount){
 		obj.directionY = amount*Math.random()-amount/2;
 	}
 }
-function addRand(){
+function addRand(){//add random object with random color
 	objects.push(new IsoObject(600*Math.random()-300,600*Math.random()-300,0,[[-15*Math.random()-5,-15*Math.random()-5,0],[5+15*Math.random(),5+15*Math.random(),5+15*Math.random()]],["fig3.png"]))
-	let i = objects.length-1
-	world.add(objects[i]);
-	objects[i].boxColor = ["#b22222","#5e7a6b","#eea205","#6495ed","#ff8c00"][Math.round(Math.random()*5)]
-	objects[i].displayImage=false;
-	objects[i].displayBox = true;
-	setRan(objects[i],8)
+	let i = objects.length-1//get index of current object
+	world.add(objects[i]);//add to world so it will be displayed
+	objects[i].boxColor = ["#b22222","#5e7a6b","#eea205","#6495ed","#ff8c00"][Math.round(Math.random()*5)]//set color to a random choice from the list
+	objects[i].displayImage=false;//make image invisible
+	objects[i].displayBox = true;//make bounding box visible
+	setRan(objects[i],8)//set direction randomly
 	objects[i].world = world;
-	if(objects[i].colliding() != undefined){
+	if(objects[i].colliding() != undefined){//Make object invisible and uncollidable when it already collides with something else
 		objects[i].hasCollision = false;
 		objects[i].displayBox = false;
 	}
-	objects[i].collision =()=>{setRan(objects[i],14)}
+	objects[i].collision =()=>{setRan(objects[i],14)}//change direction randomly when colliding
 }
-for(let i=0;i<40;i++){
+for(let i=0;i<40;i++){//add 40 random objects
 	addRand()
 }
 function render(){
-	world.draw()
+	world.draw()//draw all elemnts
 	for(let i of objects){
-		i.update()
-		world.move(i,i.directionX,i.directionY,draw=false)
+		i.update()//upadte bounding boxes etc.
+		world.move(i,i.directionX,i.directionY,draw=false)//move object into the direction that was specified in setRan
+		//reverse direction wehen the objects leave the allowed area:
 		if(i.x>400){
 			i.directionX = -1*Math.random()*6
 		}else if(i.x<-400){
@@ -60,9 +61,9 @@ function render(){
 			i.directionY = Math.random()*6
 		}
 	}
-	requestAnimationFrame(render)
+	requestAnimationFrame(render)//recall render function
 }
-render()
+render()//first call to render function to start render loop
 
 </script>
 </body>

@@ -54,8 +54,8 @@ function addRand(){
 	objects[i].collision =()=>{
 			setRan(objects[i],7);
 			let colors = ["#6495ed","#009933","#ff8c00","#b22222"];
-			let newInd = (colors.findIndex((el)=>{return el==objects[i].boxColor})+1)%colors.length
-			objects[i].boxColor = colors[newInd];
+			let newInd = (colors.findIndex((el)=>{return el==objects[i].boxColor})+1)%colors.length//index of next color in the list
+			objects[i].boxColor = colors[newInd];//set color to the next color
 		}
 }
 for(let i=0;i<30;i++){
