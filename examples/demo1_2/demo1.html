@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+<meta charset="utf-8" />
+<title>never isometric engine</title>
+<meta name="generator" content="Geany 2.0" />
+</head>
+
+<body>
+<canvas width="1000px" height="1000px" id="myCanvas"></canvas>
+<script src= "isometricEngine.js"></script>
+<script>
+setRatio(1/4)
+setCanvas("myCanvas",pixelized=true,full=true)
+
+var world = new World("myCanvas")
+var objects = [];
+function setRan(obj,amount){
+	if(Math.round(Math.random())==1){
+		obj.directionX = amount*Math.random()-amount/2;
+		obj.directionY =0;
+	}else{
+		obj.directionX = 0;
+		obj.directionY = amount*Math.random()-amount/2;
+	}
+}
+function addRand(){
+	objects.push(new IsoObject(600*Math.random()-300,600*Math.random()-300,0,[[-15*Math.random()-5,-15*Math.random()-5,0],[5+15*Math.random(),5+15*Math.random(),5+15*Math.random()]],["fig3.png"]))
+	let i = objects.length-1
+	world.add(objects[i]);
+	objects[i].boxColor = ["#b22222","#5e7a6b","#eea205","#6495ed","#ff8c00"][Math.round(Math.random()*5)]
+	objects[i].displayImage=false;
+	objects[i].displayBox = true;
+	setRan(objects[i],8)
+	objects[i].world = world;
+	if(objects[i].colliding() != undefined){
+		objects[i].hasCollision = false;
+		objects[i].displayBox = false;
+	}
+	objects[i].collision =()=>{setRan(objects[i],14)}
+}
+for(let i=0;i<40;i++){
+	addRand()
+}
+function render(){
+	world.draw()
+	for(let i of objects){
+		i.update()
+		world.move(i,i.directionX,i.directionY,draw=false)
+		if(i.x>400){
+			i.directionX = -1*Math.random()*6
+		}else if(i.x<-400){
+			i.directionX = Math.random()*6
+		}
+		if(i.y>400){
+			i.directionY =-1*Math.random()*6
+		}else if(i.y<-400){
+			i.directionY = Math.random()*6
+		}
+	}
+	requestAnimationFrame(render)
+}
+render()
+
+</script>
+</body>
+
+</html>

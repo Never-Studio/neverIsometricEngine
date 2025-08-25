@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+<meta charset="utf-8" />
+<title>never isometric engine</title>
+<meta name="generator" content="Geany 2.0" />
+</head>
+
+<body>
+<canvas width="10000px" height="10000px" id="myCanvas"></canvas>
+<script src= "isometricEngine.js"></script>
+<script>
+setRatio(1/4)
+setCanvas("myCanvas",false,true,undefined,1000)
+
+var world = new World("myCanvas")
+var objects = [];
+function setRan(obj,amount){
+	if(obj.directionX==undefined && obj.directionY==undefined){
+		if(Math.round(Math.random())==1){
+			obj.directionX = amount*Math.random()-amount/2;
+			obj.directionY =0;
+		}else{
+			obj.directionX = 0;
+			obj.directionY = amount*Math.random()-amount/2;
+		}
+	}else{
+		if(obj.directionX != 0){
+			obj.directionX = amount*Math.random()-amount/2;
+			obj.directionY =0;
+		}else{
+			obj.directionX = 0;
+			obj.directionY = amount*Math.random()-amount/2;
+		}
+	}
+	
+}
+function addRand(){
+	let size = 10;
+	objects.push(new IsoObject(2000*Math.random()-1000,2000*Math.random()-1000,0,[[-3*size*Math.random()-size,-3*size*Math.random()-size,0],[size+3*size*Math.random(),size+3*size*Math.random(),size+3*size*Math.random()]],["fig3.png"]))
+	let i = objects.length-1
+	world.add(objects[i]);
+	objects[i].boxColor = ["#b22222","#5e7a6b","#6495ed","#ff8c00"][Math.round(Math.random()*4)]
+	objects[i].displayImage=false;
+	objects[i].displayBox = true;
+	setRan(objects[i],4)
+	objects[i].world = world;
+	if(objects[i].colliding() != undefined){
+		objects[i].hasCollision = false;
+		objects[i].displayBox = false;
+	}
+	objects[i].collision =()=>{
+			setRan(objects[i],7);
+			let colors = ["#6495ed","#009933","#ff8c00","#b22222"];
+			let newInd = (colors.findIndex((el)=>{return el==objects[i].boxColor})+1)%colors.length
+			objects[i].boxColor = colors[newInd];
+		}
+}
+
+moving = new IsoObject(-300,-300,0,[[-10,-10,0],[10,10,20]],["fig3.png"])
+moving.boxColor = "grey"
+world.add(moving)
+world.center(moving,1.1)
+//world.smartMovement = true;
+moving.displayBox = true;
+moving.displayImage=false;
+world.setKeyObject(moving)
+for(let i=0;i<50;i++){
+	addRand()
+}
+
+function render(){
+	world.draw()
+	for(let i of objects){
+		i.update()
+		i.move(i.directionX,i.directionY,draw=false)
+		if(i.x>400){
+			i.directionX = -1*Math.random()*3
+		}else if(i.x<-400){
+			i.directionX = Math.random()*3
+		}
+		if(i.y>400){
+			i.directionY =-1*Math.random()*3
+		}else if(i.y<-400){
+			i.directionY = Math.random()*3
+		}
+	}
+	requestAnimationFrame(render)
+}
+render()
+
+</script>
+</body>
+
+</html>
